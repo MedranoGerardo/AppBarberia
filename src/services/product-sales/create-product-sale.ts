@@ -1,10 +1,10 @@
 import {
-    addDoc,
-    collection,
-    doc,
-    getDoc,
-    serverTimestamp,
-    updateDoc,
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
@@ -13,6 +13,8 @@ interface CreateProductSaleInput {
   productId: string;
   quantity: number;
   paymentMethod: "cash" | "card" | "transfer";
+  customerId?: string;
+  customerName?: string;
 }
 
 export async function createProductSale({
@@ -20,6 +22,8 @@ export async function createProductSale({
   productId,
   quantity,
   paymentMethod,
+  customerId,
+  customerName,
 }: CreateProductSaleInput) {
   const productRef = doc(
     db,
@@ -62,6 +66,8 @@ export async function createProductSale({
   const saleRef = await addDoc(salesRef, {
     productId,
     productName: product.name,
+    customerId: customerId || "",
+    customerName: customerName || "Cliente no registrado",
     quantity,
     unitPrice: price,
     unitCost: cost,

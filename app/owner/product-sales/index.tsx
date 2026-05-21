@@ -1,30 +1,37 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    RefreshControl,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { createProductSale } from "../../../src/services/product-sales/create-product-sale";
 import {
-    getProductSales,
-    ProductSaleItem,
+  getProductSales,
+  ProductSaleItem,
 } from "../../../src/services/product-sales/get-product-sales";
 import {
-    getProducts,
-    ProductItem,
+  getProducts,
+  ProductItem,
 } from "../../../src/services/products/get-products";
+import {
+  ClientItem,
+  getClients,
+} from "../../../src/services/users/get-clients";
 import { useAuthStore } from "../../../src/store/auth.store";
 
 export default function OwnerProductSalesScreen() {
+  const [clients, setClients] = useState<ClientItem[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState("");
+
   const { user } = useAuthStore();
   const barbershopId = user?.ownerBarbershopId || "";
 
@@ -43,10 +50,13 @@ export default function OwnerProductSalesScreen() {
     try {
       if (!barbershopId) return;
 
-      const [productsData, salesData] = await Promise.all([
+      const [productsData, salesData, clientsData] = await Promise.all([
         getProducts(barbershopId),
         getProductSales(barbershopId),
+        getClients(),
       ]);
+
+      setClients(clientsData);
 
       setProducts(productsData);
       setSales(salesData);
@@ -76,6 +86,9 @@ export default function OwnerProductSalesScreen() {
 
   const selectedProduct =
     products.find((product) => product.id === selectedProductId) || null;
+
+  const selectedClient =
+    clients.find((client) => client.id === selectedClientId) || null;
 
   const numericQuantity = Number(quantity || 0);
 
@@ -128,11 +141,14 @@ export default function OwnerProductSalesScreen() {
         productId: selectedProduct.id,
         quantity: numericQuantity,
         paymentMethod,
+        customerId: selectedClient?.id || "",
+        customerName: selectedClient?.fullName || "Cliente no registrado",
       });
 
       setSelectedProductId("");
       setQuantity("");
       setPaymentMethod("cash");
+      setSelectedClientId("");
 
       await loadData();
 
@@ -202,7 +218,56 @@ export default function OwnerProductSalesScreen() {
             </View>
 
             <View style={styles.formCard}>
-              <Text style={styles.formTitle}>Nueva venta</Text>
+              <Text style={styles.label}>Cliente</Text>
+
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.productsRow}
+              >
+                <TouchableOpacity
+                  style={[
+                    styles.productChip,
+                    selectedClientId === "" && styles.productChipActive,
+                  ]}
+                  onPress={() => setSelectedClientId("")}
+                  activeOpacity={0.85}
+                >
+                  <Text
+                    style={[
+                      styles.productChipText,
+                      selectedClientId === "" && styles.productChipTextActive,
+                    ]}
+                  >
+                    Cliente no registrado
+                  </Text>
+                </TouchableOpacity>
+
+                {clients.map((client) => {
+                  const selected = selectedClientId === client.id;
+
+                  return (
+                    <TouchableOpacity
+                      key={client.id}
+                      style={[
+                        styles.productChip,
+                        selected && styles.productChipActive,
+                      ]}
+                      onPress={() => setSelectedClientId(client.id)}
+                      activeOpacity={0.85}
+                    >
+                      <Text
+                        style={[
+                          styles.productChipText,
+                          selected && styles.productChipTextActive,
+                        ]}
+                      >
+                        {client.fullName}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
 
               <Text style={styles.label}>Producto</Text>
 
@@ -233,6 +298,7 @@ export default function OwnerProductSalesScreen() {
                           style={[
                             styles.productChipText,
                             selected && styles.productChipTextActive,
+                            ,
                           ]}
                         >
                           {product.name}
@@ -349,6 +415,9 @@ export default function OwnerProductSalesScreen() {
             <View style={styles.saleTop}>
               <View>
                 <Text style={styles.saleProduct}>{item.productName}</Text>
+                <Text style={styles.saleDetail}>
+                  Cliente: {item.customerName || "Cliente no registrado"}
+                </Text>
                 <Text style={styles.saleDetail}>
                   Cantidad: {item.quantity} ·{" "}
                   {getPaymentLabel(item.paymentMethod)}

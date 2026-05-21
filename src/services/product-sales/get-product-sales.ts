@@ -5,6 +5,8 @@ export interface ProductSaleItem {
   id: string;
   productId: string;
   productName: string;
+  customerId?: string;
+  customerName?: string;
   quantity: number;
   unitPrice: number;
   unitCost: number;

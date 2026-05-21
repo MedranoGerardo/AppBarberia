@@ -313,6 +313,18 @@ export default function OwnerDashboardScreen() {
               <Text style={styles.quickActionTitle}>Horario</Text>
               <Text style={styles.quickActionText}>Configura días y horas</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.quickActionCard}
+              activeOpacity={0.85}
+              onPress={() => router.push("/owner/clients" as any)}
+            >
+              <Text style={styles.quickActionTitle}>Clientes</Text>
+
+              <Text style={styles.quickActionText}>
+                Historial y clientes frecuentes
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {/* Resumen del negocio */}
