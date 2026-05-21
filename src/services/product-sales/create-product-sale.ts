@@ -8,6 +8,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
+import { createNotification } from "../notifications/create-notification";
+
 interface CreateProductSaleInput {
   barbershopId: string;
   productId: string;
@@ -95,6 +97,22 @@ export async function createProductSale({
     saleId: saleRef.id,
     createdAt: serverTimestamp(),
   });
+
+  await createNotification({
+    barbershopId,
+    title: "Venta registrada",
+    message: `${product.name} vendido. Cantidad: ${quantity}. Total: $${total.toFixed(2)}`,
+    type: "sale",
+  });
+
+  if (newStock <= 5) {
+    await createNotification({
+      barbershopId,
+      title: "Stock bajo",
+      message: `${product.name} tiene stock bajo. Stock actual: ${newStock}`,
+      type: "stock",
+    });
+  }
 
   return saleRef.id;
 }

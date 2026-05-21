@@ -325,6 +325,17 @@ export default function OwnerDashboardScreen() {
                 Historial y clientes frecuentes
               </Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.quickActionCard}
+              activeOpacity={0.85}
+              onPress={() => router.push("/owner/notifications" as any)}
+            >
+              <Text style={styles.quickActionTitle}>Notificaciones</Text>
+              <Text style={styles.quickActionText}>
+                Alertas y avisos importantes
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {/* Resumen del negocio */}
