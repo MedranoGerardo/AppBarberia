@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { sendPasswordReset } from "../../../../src/services/auth/send-password-reset";
 import {
   EmployeeDetail,
   getEmployeeById,
@@ -31,6 +32,29 @@ export default function EditEmployeeScreen() {
   const [available, setAvailable] = useState(true);
   const [status, setStatus] = useState("active");
   const [loading, setLoading] = useState(true);
+
+  const handlePasswordReset = () => {
+    if (!email.trim()) {
+      Alert.alert("Error", "El empleado no tiene correo");
+      return;
+    }
+
+    Alert.alert("Restablecer contraseña", `Se enviará un correo a ${email}`, [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Enviar",
+        onPress: async () => {
+          try {
+            await sendPasswordReset(email);
+
+            Alert.alert("Correo enviado", "Se envió el enlace de recuperación");
+          } catch (error: any) {
+            Alert.alert("Error", error.message || "No se pudo enviar");
+          }
+        },
+      },
+    ]);
+  };
 
   useEffect(() => {
     const loadEmployee = async () => {
@@ -156,14 +180,19 @@ export default function EditEmployeeScreen() {
 
             <Text style={styles.label}>Correo electrónico</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, styles.disabledInput]}
               placeholder="correo@ejemplo.com"
               placeholderTextColor="#9CA3AF"
-              autoCapitalize="none"
               keyboardType="email-address"
+              autoCapitalize="none"
               value={email}
-              onChangeText={setEmail}
+              editable={false}
             />
+
+            <Text style={styles.helperText}>
+              El correo se usa para iniciar sesión. Si está incorrecto, elimina
+              este empleado y créalo nuevamente.
+            </Text>
 
             <Text style={styles.label}>Teléfono</Text>
             <TextInput
@@ -293,18 +322,30 @@ export default function EditEmployeeScreen() {
             </View>
 
             <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={handleSave}
+              style={styles.resetPasswordButton}
+              onPress={handlePasswordReset}
               activeOpacity={0.85}
             >
               <LinearGradient
-                colors={["#1A1A1A", "#2D2D2D"]}
+                colors={["#F59E0B", "#D97706"]}
                 style={styles.gradientButton}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
               >
-                <Text style={styles.primaryButtonText}>Guardar cambios</Text>
+                <Text style={styles.resetPasswordButtonText}>
+                  Enviar restablecimiento de contraseña
+                </Text>
               </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.resetPasswordButton}
+              onPress={handlePasswordReset}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.resetPasswordButtonText}>
+                Restablecer contraseña
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -497,6 +538,32 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
+    fontWeight: "700",
+    letterSpacing: 0.3,
+  },
+  disabledInput: {
+    opacity: 0.65,
+    backgroundColor: "#F3F4F6",
+  },
+  helperText: {
+    fontSize: 12,
+    color: "#6B7280",
+    lineHeight: 18,
+    marginBottom: 8,
+  },
+  resetPasswordButton: {
+    borderRadius: 24,
+    overflow: "hidden",
+    marginTop: 12,
+    shadowColor: "#F59E0B",
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  resetPasswordButtonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
     fontWeight: "700",
     letterSpacing: 0.3,
   },

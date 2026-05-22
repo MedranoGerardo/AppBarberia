@@ -14,4 +14,5 @@ export interface AppUser {
   isAdmin?: boolean;
   createdAt?: unknown;
   updatedAt?: unknown;
+  employeeId?: string;
 }

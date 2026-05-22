@@ -11,10 +11,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { createEmployee } from "../../../src/services/employees/create-employee";
+import { createEmployeeAccount } from "../../../src/services/employees/create-employee-account";
 import { useAuthStore } from "../../../src/store/auth.store";
 
 export default function CreateEmployeeScreen() {
+  const [password, setPassword] = useState("");
   const { user } = useAuthStore();
 
   const [fullName, setFullName] = useState("");
@@ -34,12 +35,19 @@ export default function CreateEmployeeScreen() {
         return;
       }
 
-      await createEmployee({
+      await createEmployeeAccount({
         barbershopId: user.ownerBarbershopId,
         fullName,
         email,
         phone,
+        password,
         isAdmin,
+        available: true,
+        status: "active",
+        workDays: [],
+        startHour: "",
+        endHour: "",
+        specialties: [],
       });
 
       Alert.alert("Éxito", "Empleado creado correctamente");
@@ -114,6 +122,16 @@ export default function CreateEmployeeScreen() {
               keyboardType="phone-pad"
               value={phone}
               onChangeText={setPhone}
+            />
+
+            <Text style={styles.label}>Contraseña temporal</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Mínimo 6 caracteres"
+              placeholderTextColor="#8A8A8A"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
             />
 
             <Text style={styles.label}>Permiso</Text>
