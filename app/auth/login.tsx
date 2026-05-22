@@ -48,9 +48,15 @@ export default function LoginScreen() {
       }
 
       if (appUser.role === "employee") {
-        router.replace("/employee/panel" as any);
+        if (appUser.isAdmin) {
+          router.replace("/employee/admin" as any);
+        } else {
+          router.replace("/employee/panel" as any);
+        }
         return;
       }
+
+      router.replace("/client/home" as any);
 
       router.replace("/client/home" as any);
     } catch (error: any) {

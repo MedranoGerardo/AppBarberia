@@ -5,22 +5,20 @@ interface UpdateEmployeeInput {
   barbershopId: string;
   employeeId: string;
   fullName: string;
-  email: string;
   phone: string;
-  isAdmin: boolean;
+  status: "active" | "inactive";
   available: boolean;
-  status: string;
+  isAdmin: boolean;
 }
 
 export async function updateEmployee({
   barbershopId,
   employeeId,
   fullName,
-  email,
   phone,
-  isAdmin,
-  available,
   status,
+  available,
+  isAdmin,
 }: UpdateEmployeeInput) {
   const employeeRef = doc(
     db,
@@ -31,12 +29,21 @@ export async function updateEmployee({
   );
 
   await updateDoc(employeeRef, {
-    fullName: fullName.trim(),
-    email: email.trim(),
-    phone: phone.trim(),
-    isAdmin,
-    available,
+    fullName,
+    phone,
     status,
+    available,
+    isAdmin,
+    updatedAt: serverTimestamp(),
+  });
+
+  const userRef = doc(db, "users", employeeId);
+
+  await updateDoc(userRef, {
+    fullName,
+    phone,
+    status,
+    isAdmin,
     updatedAt: serverTimestamp(),
   });
 }

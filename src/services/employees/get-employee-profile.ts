@@ -43,7 +43,11 @@ export async function getEmployeeProfile(
     collection(db, "barbershops", barbershopId, "services"),
   );
 
-  const assignedServiceIds: string[] = employeeData.specialties || [];
+  const assignedServiceIds: string[] =
+    employeeData.specialties ||
+    employeeData.serviceIds ||
+    employeeData.assignedServices ||
+    [];
 
   const services = servicesSnap.docs
     .map((serviceDoc) => ({
