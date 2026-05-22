@@ -16,7 +16,22 @@ import {
 } from "../../src/services/employees/get-employee-dashboard-data";
 import { useAuthStore } from "../../src/store/auth.store";
 
+import { signOut } from "firebase/auth";
+import { auth } from "../../src/config/firebase";
+
 export default function EmployeePanelScreen() {
+  const logoutStore = useAuthStore((state) => state.logoutStore);
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+
+      logoutStore();
+
+      router.replace("/auth/login");
+    } catch (error) {
+      console.log("Error cerrando sesión:", error);
+    }
+  };
   const { user } = useAuthStore();
 
   const barbershopId = user?.employeeBarbershopId || "";
@@ -113,6 +128,14 @@ export default function EmployeePanelScreen() {
               </Text>
             </View>
           </View>
+
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={handleLogout}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.statsGrid}>
@@ -174,7 +197,11 @@ export default function EmployeePanelScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionCard} activeOpacity={0.85}>
+          <TouchableOpacity
+            style={styles.actionCard}
+            activeOpacity={0.85}
+            onPress={() => router.push("/employee/profile" as any)}
+          >
             <Text style={styles.actionTitle}>Mi perfil</Text>
             <Text style={styles.actionText}>
               Consulta tu información y disponibilidad.
@@ -410,5 +437,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666666",
     lineHeight: 20,
+  },
+  logoutButton: {
+    backgroundColor: "#EF4444",
+    borderRadius: 24,
+    paddingVertical: 18,
+    alignItems: "center",
+    marginTop: 22,
+  },
+
+  logoutButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "900",
   },
 });

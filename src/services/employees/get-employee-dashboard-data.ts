@@ -82,9 +82,11 @@ export async function getEmployeeDashboardData(
     isAdmin: employeeData.isAdmin || false,
     available: employeeData.available ?? true,
     status: employeeData.status || "active",
-    servicesCount: Array.isArray(employeeData.serviceIds)
-      ? employeeData.serviceIds.length
-      : 0,
+    servicesCount: Array.isArray(employeeData.specialties)
+      ? employeeData.specialties.length
+      : Array.isArray(employeeData.serviceIds)
+        ? employeeData.serviceIds.length
+        : 0,
     appointmentsToday,
     upcomingAppointments,
     startHour: employeeData.startHour || "",
