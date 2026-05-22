@@ -53,45 +53,62 @@ export default function EmployeeAdminScreen() {
               <Text style={styles.secondaryPillText}>Panel interno</Text>
             </View>
           </View>
+
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={handleLogout}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.sectionTitle}>Gestión rápida</Text>
 
         <View style={styles.grid}>
           <TouchableOpacity
-            style={styles.actionCardDark}
-            activeOpacity={0.85}
-            onPress={() => router.push("/employee/appointments" as any)}
-          >
-            <Text style={styles.actionTitleDark}>Citas</Text>
-
-            <Text style={styles.actionTextDark}>
-              Gestiona y completa citas asignadas.
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.actionCardBlue}
+            style={[styles.actionCard, styles.blueCard]}
             activeOpacity={0.85}
             onPress={() => router.push("/employee/admin-appointments" as any)}
           >
-            <Text style={styles.actionTitleBlue}>Todas las citas</Text>
+            <Text style={styles.actionTitleBlue}>Citas</Text>
+            <Text style={styles.actionTextBlue}>Reservas y pagos</Text>
+          </TouchableOpacity>
 
-            <Text style={styles.actionTextBlue}>
-              Revisa las reservas generales.
-            </Text>
+          <TouchableOpacity
+            style={[styles.actionCard, styles.darkCard]}
+            activeOpacity={0.85}
+            onPress={() => router.push("/employee/admin-services" as any)}
+          >
+            <Text style={styles.actionTitleDark}>Servicios</Text>
+            <Text style={styles.actionTextDark}>Precios y duración</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.actionCard}
             activeOpacity={0.85}
-            onPress={() => router.push("/employee/admin-services" as any)}
+            onPress={() => router.push("/employee/admin-products" as any)}
           >
-            <Text style={styles.actionTitle}>Servicios</Text>
+            <Text style={styles.actionTitle}>Productos</Text>
+            <Text style={styles.actionText}>Inventario</Text>
+          </TouchableOpacity>
 
-            <Text style={styles.actionText}>
-              Consulta servicios disponibles.
-            </Text>
+          <TouchableOpacity
+            style={styles.actionCard}
+            activeOpacity={0.85}
+            onPress={() => router.push("/employee/admin-product-sales" as any)}
+          >
+            <Text style={styles.actionTitle}>Ventas</Text>
+            <Text style={styles.actionText}>Registrar ventas</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.actionCard}
+            activeOpacity={0.85}
+            onPress={() => router.push("/employee/admin-cash-closure" as any)}
+          >
+            <Text style={styles.actionTitle}>Caja</Text>
+            <Text style={styles.actionText}>Cierre diario</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -99,21 +116,10 @@ export default function EmployeeAdminScreen() {
             activeOpacity={0.85}
             onPress={() => router.push("/employee/profile" as any)}
           >
-            <Text style={styles.actionTitle}>Mi perfil</Text>
-
-            <Text style={styles.actionText}>
-              Consulta tu información laboral.
-            </Text>
+            <Text style={styles.actionTitle}>Perfil</Text>
+            <Text style={styles.actionText}>Mi información</Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={handleLogout}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -215,7 +221,9 @@ const styles = StyleSheet.create({
   },
 
   grid: {
-    gap: 16,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
   },
 
   actionCardDark: {
@@ -231,48 +239,51 @@ const styles = StyleSheet.create({
   },
 
   actionCard: {
+    width: "48%",
     backgroundColor: "#FFFFFF",
-    borderRadius: 28,
-    padding: 24,
+    borderRadius: 24,
+    padding: 18,
+    minHeight: 145,
+    justifyContent: "space-between",
   },
 
   actionTitleDark: {
     color: "#FFFFFF",
-    fontSize: 22,
+    fontSize: 19,
     fontWeight: "900",
-    marginBottom: 10,
+    marginBottom: 6,
   },
 
   actionTextDark: {
     color: "#D1D5DB",
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 13,
+    lineHeight: 18,
   },
 
   actionTitleBlue: {
     color: "#FFFFFF",
-    fontSize: 22,
+    fontSize: 19,
     fontWeight: "900",
-    marginBottom: 10,
+    marginBottom: 6,
   },
 
   actionTextBlue: {
     color: "#E0E7FF",
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 13,
+    lineHeight: 18,
   },
 
   actionTitle: {
     color: "#111111",
-    fontSize: 22,
+    fontSize: 19,
     fontWeight: "900",
-    marginBottom: 10,
+    marginBottom: 6,
   },
 
   actionText: {
     color: "#666666",
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 13,
+    lineHeight: 18,
   },
 
   logoutButton: {
@@ -287,5 +298,12 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "900",
+  },
+  blueCard: {
+    backgroundColor: "#2F6BFF",
+  },
+
+  darkCard: {
+    backgroundColor: "#111827",
   },
 });
