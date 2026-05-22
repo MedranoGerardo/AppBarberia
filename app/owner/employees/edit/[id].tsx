@@ -339,13 +339,18 @@ export default function EditEmployeeScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.resetPasswordButton}
-              onPress={handlePasswordReset}
+              style={styles.primaryButton}
+              onPress={handleSave}
               activeOpacity={0.85}
             >
-              <Text style={styles.resetPasswordButtonText}>
-                Restablecer contraseña
-              </Text>
+              <LinearGradient
+                colors={["#1A1A1A", "#2D2D2D"]}
+                style={styles.gradientButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.primaryButtonText}>Guardar cambios</Text>
+              </LinearGradient>
             </TouchableOpacity>
 
             <TouchableOpacity
