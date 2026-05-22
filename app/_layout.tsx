@@ -61,9 +61,25 @@ export default function RootLayout() {
     }
 
     if (user.role === "employee") {
-      if (!inEmployee) {
+      const currentRoute = segments.join("/");
+
+      const isEmployeeAdminRoute = currentRoute.startsWith("employee/admin");
+      const isEmployeeNormalRoute =
+        currentRoute === "employee/panel" ||
+        currentRoute === "employee/appointments" ||
+        currentRoute === "employee/profile";
+
+      if (user.isAdmin) {
+        if (!inEmployee || (!isEmployeeAdminRoute && !isEmployeeNormalRoute)) {
+          router.replace("/employee/admin" as any);
+        }
+        return;
+      }
+
+      if (!inEmployee || isEmployeeAdminRoute) {
         router.replace("/employee/panel" as any);
       }
+
       return;
     }
 
